@@ -4,12 +4,21 @@ pipeline {
 
     environment {
         PROJECT_NAME = 'api-thetiptop'
+        BUILD_IMAGE_NAME = "build/${PROJECT_NAME}-${env.BRANCH_NAME}".toLowerCase()
     }
     stages {
 
         stage('Build') {
             steps {
                 echo 'Building ...'
+                script {
+                    // prepare execution image
+                    BUILD_IMAGE = docker.build(BUILD_IMAGE_NAME, '-f Dockerfile.test .')
+                    // Build project - check syntax error ...
+                    BUILD_IMAGE.inside{
+                        sh 'mvn clean compile'
+                    }
+                }
             }
         }
 

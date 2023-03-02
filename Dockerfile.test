@@ -1,0 +1,8 @@
+FROM maven:3.8.5-openjdk-17-slim
+
+RUN mkdir -p /var/log/thetiptop-api
+RUN chown 1000:1000 /var/log/thetiptop-api
+
+COPY . /usr/src/app
+
+WORKDIR /usr/src/app
