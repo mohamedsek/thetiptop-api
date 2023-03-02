@@ -81,6 +81,7 @@ pipeline {
     post {
         always {
             echo 'This will always run'
+            sh 'docker image prune -a'
             cleanWs()
             dir("${env.WORKSPACE}@tmp") {
                 deleteDir()
