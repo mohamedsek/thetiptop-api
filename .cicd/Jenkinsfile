@@ -25,10 +25,13 @@ pipeline {
         stage('Test') {
             steps {
                 echo ' Unit Testing ...'
-                BUILD_IMAGE.inside {
+                script{
+                    BUILD_IMAGE.inside {
                         sh 'mvn clean test'
                         junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
                     }
+                }
+                
             }
         }
 
