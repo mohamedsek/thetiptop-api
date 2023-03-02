@@ -16,7 +16,7 @@ pipeline {
                     BUILD_IMAGE = docker.build(BUILD_IMAGE_NAME, '-f Dockerfile.test .')
                     // Build project - check syntax error ...
                     BUILD_IMAGE.inside{
-                        sh 'mvn clean compile'
+                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean compile'
                     }
                 }
             }
@@ -27,7 +27,7 @@ pipeline {
                 echo ' Unit Testing ...'
                 script{
                     BUILD_IMAGE.inside("--network web") {
-                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test'
+                        sh 'mvn clean test'
                         junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
                     }
                 }
