@@ -57,11 +57,12 @@ pipeline {
 
 
         stage('Deploy Approval') {
-            steps {
-                echo 'Deploy Approval ...'  
-                when {
+            when {
                     branch 'main'
                 }
+            steps {
+                echo 'Deploy Approval ...'  
+                
                 script {
                     try {
                         timeout(time: 30, unit: 'MINUTES') {
