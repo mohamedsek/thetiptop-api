@@ -59,6 +59,19 @@ pipeline {
         stage('Deploy Approval') {
             steps {
                 echo 'Deploy Approval ...'  
+                when {
+                    branch 'main'
+                }
+                script {
+                    try {
+                        timeout(time: 30, unit: 'MINUTES') {
+                            canDeployProduction = input message: 'Proceed with build and deployment?',
+                                    parameters: [booleanParam(defaultValue: false, description: 'This action will have an impact on the production environment. Are you sure you want to continue ?', name: 'Production Deploy')]
+                        }
+                    } catch (Exception err) {
+                        echo 'The timeout has expired,the build and deployment will be skipped. '
+                    }
+                }
             }
         }
 
