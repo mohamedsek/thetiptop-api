@@ -85,9 +85,6 @@ pipeline {
         }
 
         stage('Build image') {
-            steps {
-                echo 'Build image to Deploy ...'  
-            }
             when {
                 expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
             }
