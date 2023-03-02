@@ -4,7 +4,15 @@ pipeline {
 
     environment {
         PROJECT_NAME = 'api-thetiptop'
+        DATE = new Date().format('yy.M')
+        TAG = "${DATE}.${BUILD_NUMBER}"
+        REGISTRY_DOMAIN = 'registry.dsp-archiwebf22-at-sb-ms.fr'
+        REGISTRY_URL = "https://${REGISTRY_DOMAIN}"
+        registryCredential = 'registry-credentials'
+        IMAGE_NAME = "thetiptop/${PROJECT_NAME}-${env.BRANCH_NAME}".toLowerCase()
+        APP_IMAGE = ''
         BUILD_IMAGE_NAME = "build/${PROJECT_NAME}-${env.BRANCH_NAME}".toLowerCase()
+        BUILD_IMAGE = ''
     }
     stages {
 
@@ -80,10 +88,26 @@ pipeline {
             steps {
                 echo 'Build image to Deploy ...'  
             }
+            when {
+                expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
+            }
+            steps {
+                script {
+                    APP_IMAGE = docker.build "$IMAGE_NAME:$TAG"
+                }
+            }
         }
         stage('Push Image') {
+            when {
+                expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
+            }
             steps {
-                echo 'Push image to Deploy ...'  
+                script {
+                    docker.withRegistry(REGISTRY_URL, registryCredential) {
+                        APP_IMAGE.push("$TAG")
+                        APP_IMAGE.push('latest')
+                    }
+                }
             }
         }
         stage('Deploy') {
