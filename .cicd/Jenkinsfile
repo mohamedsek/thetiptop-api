@@ -40,7 +40,7 @@ pipeline {
                 echo 'Qality control ...' 
                 script{
                     BUILD_IMAGE.inside("--network web") {
-                        sh 'mvn clean test jacoco:report'
+                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test jacoco:report'
                         jacoco( 
                               execPattern: 'target/*.exec',
                               classPattern: 'target/classes',
