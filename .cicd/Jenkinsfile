@@ -1,0 +1,146 @@
+def canDeployProduction = false
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_NAME = 'api-thetiptop'
+        DATE = new Date().format('yy.M')
+        TAG = "${DATE}.${BUILD_NUMBER}"
+        REGISTRY_DOMAIN = 'registry.dsp-archiwebf22-at-sb-ms.fr'
+        REGISTRY_URL = "https://${REGISTRY_DOMAIN}"
+        registryCredential = 'registry-credentials'
+        IMAGE_NAME = "thetiptop/${PROJECT_NAME}-${env.BRANCH_NAME}".toLowerCase()
+        APP_IMAGE = ''
+        BUILD_IMAGE_NAME = "build/${PROJECT_NAME}-${env.BRANCH_NAME}".toLowerCase()
+        BUILD_IMAGE = ''
+    }
+    stages {
+
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+                script {
+                    // prepare execution image
+                    BUILD_IMAGE = docker.build(BUILD_IMAGE_NAME, '-f Dockerfile.test .')
+                    // Build project - check syntax error ...
+                    BUILD_IMAGE.inside{
+                        sh 'mvn clean compile'
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo ' Unit Testing ...'
+                script{
+                    BUILD_IMAGE.inside("--network web") {
+                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test'
+                        junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
+                    }
+                }
+                
+            }
+        }
+
+        stage('Qality control') {
+            steps {
+                echo 'Qality control ...' 
+                script{
+                    BUILD_IMAGE.inside("--network web") {
+                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test jacoco:report'
+                        jacoco( 
+                              execPattern: 'target/*.exec',
+                              classPattern: 'target/classes',
+                              sourcePattern: 'src/main/java',
+                              exclusionPattern: 'src/test*'
+                        )
+                        publishCoverage(
+                          adapters: [jacocoAdapter('target/site/jacoco/jacoco.xml')]
+                        )
+                    }
+                }
+            }
+        }
+
+
+        stage('Deploy Approval') {
+            when {
+                    branch 'main'
+                }
+            steps {
+                echo 'Deploy Approval ...'  
+                
+                script {
+                    try {
+                        timeout(time: 30, unit: 'MINUTES') {
+                            canDeployProduction = input message: 'Proceed with build and deployment?',
+                                    parameters: [booleanParam(defaultValue: false, description: 'This action will have an impact on the production environment. Are you sure you want to continue ?', name: 'Production Deploy')]
+                        }
+                    } catch (Exception err) {
+                        echo 'The timeout has expired,the build and deployment will be skipped. '
+                    }
+                }
+            }
+        }
+
+        stage('Build image') {
+            when {
+                expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
+            }
+            steps {
+                script {
+                    APP_IMAGE = docker.build "$IMAGE_NAME:$TAG"
+                }
+            }
+        }
+        stage('Push Image') {
+            when {
+                expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
+            }
+            steps {
+                script {
+                    docker.withRegistry(REGISTRY_URL, registryCredential) {
+                        APP_IMAGE.push("$TAG")
+                        APP_IMAGE.push('latest')
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy ...'  
+            }
+        }
+    }
+    post {
+        always {
+            echo 'This will always run'
+            sh 'docker image prune -a'
+            cleanWs()
+            dir("${env.WORKSPACE}@tmp") {
+                deleteDir()
+            }
+            dir("${env.WORKSPACE}@script") {
+                deleteDir()
+            }
+            dir("${env.WORKSPACE}@script@tmp") {
+                deleteDir()
+            }
+        }
+
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'
+        }
+    }
+}
