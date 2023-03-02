@@ -16,7 +16,7 @@ pipeline {
                     BUILD_IMAGE = docker.build(BUILD_IMAGE_NAME, '-f Dockerfile.test .')
                     // Build project - check syntax error ...
                     BUILD_IMAGE.inside{
-                        sh 'mvn -DargLine="-Dspring.profiles.active=test" clean compile'
+                        sh 'mvn clean compile'
                     }
                 }
             }
