@@ -27,7 +27,7 @@ pipeline {
                 echo ' Unit Testing ...'
                 script{
                     BUILD_IMAGE.inside("--network web") {
-                        sh 'mvn clean test'
+                        sh 'mvn -Ptest clean test'
                         junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
                     }
                 }
