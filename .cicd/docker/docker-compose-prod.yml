@@ -1,0 +1,20 @@
+version: '3.8'
+networks:
+  web:
+    name: web
+    external: true
+
+services:
+  api-thetiptop-prod:
+    container_name: "fr.dsp.thetiptop.api-prod"
+    image: registry.dsp-archiwebf22-at-sb-ms.fr/thetiptop/api-thetiptop-main:latest
+    restart: unless-stopped
+    environment:
+      - 'SPRING_PROFILES_ACTIVE=prod'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-thetiptop.rule=Host(`prod.api.dsp-archiwebf22-at-sb-ms.fr`)
+      - traefik.http.routers.api-thetiptop.entrypoints=websecure
+      - traefik.http.services.api-thetiptop.loadbalancer.server.port=8080
+    networks:
+      - web
