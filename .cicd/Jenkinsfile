@@ -108,8 +108,25 @@ pipeline {
             }
         }
         stage('Deploy') {
+            when {
+                expression { (canDeployProduction && env.BRANCH_NAME == 'main') || env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'release' }
+            }
             steps {
-                echo 'Deploy ...'  
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo 'Deploy Production environment '
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-prod.yml down'
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-prod.yml up -d'
+                    }  else if (env.BRANCH_NAME == 'release') {
+                        echo 'Deploy stage environment '
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-stage.yml down'
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-stage.yml up -d'
+                    } else {
+                        echo 'Deploy dev environment '
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-dev.yml down'
+                        sh 'docker compose -f ./.cicd/docker/docker-compose-dev.yml up -d'
+                    }
+                }
             }
         }
     }
