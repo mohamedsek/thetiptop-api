@@ -10,7 +10,7 @@ services:
     image: registry.dsp-archiwebf22-at-sb-ms.fr/thetiptop/api-thetiptop-release:latest
     restart: unless-stopped
     environment:
-      - 'SPRING_PROFILES_ACTIVE=dev'
+      - 'SPRING_PROFILES_ACTIVE=stage'
     labels:
       - traefik.enable=true
       - traefik.http.routers.api-thetiptop-dev.rule=Host(`release.api.dsp-archiwebf22-at-sb-ms.fr`)
