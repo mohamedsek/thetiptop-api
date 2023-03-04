@@ -10,4 +10,6 @@ public interface TicketService {
     TicketModel createTicket();
 
     Optional<TicketModel> findByCode(String ticketCode);
+
+    TicketModel save(TicketModel ticketModel);
 }

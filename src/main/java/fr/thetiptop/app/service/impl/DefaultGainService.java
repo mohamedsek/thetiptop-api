@@ -4,6 +4,7 @@ import fr.thetiptop.app.dto.GainDto;
 import fr.thetiptop.app.mapper.GainMapper;
 import fr.thetiptop.app.models.GainModel;
 import fr.thetiptop.app.models.TicketModel;
+import fr.thetiptop.app.repository.GainRepository;
 import fr.thetiptop.app.service.GainService;
 import fr.thetiptop.app.service.TicketService;
 import fr.thetiptop.app.util.GameUtil;
@@ -11,8 +12,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,7 @@ public class DefaultGainService implements GainService {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     private TicketService ticketService;
+    private GainRepository gainRepository;
 
     public DefaultGainService(TicketService ticketService) {
         this.ticketService = ticketService;
@@ -55,7 +59,23 @@ public class DefaultGainService implements GainService {
             throw new RuntimeException("The game is not available at this date.");
         }
 
-        return null;
+        // TODO: Assign Client to ticket
+
+        List<GainModel> availableGains = findAvailableGains();
+
+        int selectedGainIndex = GameUtil.randomValue(0, availableGains.size());
+        // choose an available gain
+        GainModel randomGainModel = availableGains.get(selectedGainIndex);
+
+        logger.info(String.format("Selected gain to assign '%s'", randomGainModel.getTitle()));
+
+        // assign gain
+        ticketModel.setParticipating(Boolean.TRUE);
+        ticketModel.setGain(randomGainModel);
+
+        ticketService.save(ticketModel);
+
+        return randomGainModel;
     }
 
     private Boolean isGameActive() {
@@ -68,5 +88,15 @@ public class DefaultGainService implements GainService {
         }
 
         return true;
+    }
+
+    private List<GainModel> findAvailableGains() {
+        List<GainModel> gains = gainRepository.findAll();
+
+        if (CollectionUtils.isEmpty(gains)) {
+            return null;
+        }
+
+        return gains;
     }
 }

@@ -55,6 +55,11 @@ public class DefaultTicketService implements TicketService {
         return ticketModel;
     }
 
+    @Override
+    public TicketModel save(TicketModel ticketModel) {
+        return ticketRepository.save(ticketModel);
+    }
+
     private String generateCode() {
         StringBuilder sb = new StringBuilder();
         sb.append(generateRandomBloc());
