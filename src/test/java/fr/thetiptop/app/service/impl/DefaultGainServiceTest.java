@@ -6,9 +6,9 @@ import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.GainRepository;
 import fr.thetiptop.app.service.TicketService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,7 +19,6 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class DefaultGainServiceTest {
 
-    @InjectMocks
     private DefaultGainService gainService;
 
     @Mock
@@ -32,6 +31,11 @@ public class DefaultGainServiceTest {
     private TicketModel ticketModel;
 
     private static final String TICKET_CODE = "12345-12345";
+
+    @BeforeEach
+    public void setup() {
+        gainService = new DefaultGainService(ticketService, gainRepository);
+    }
 
     @Test
     public void testGenerateGain_dateInvalid() {
