@@ -1,5 +1,6 @@
 package fr.thetiptop.app.service.impl;
 
+import fr.thetiptop.app.dto.GainDistributionDto;
 import fr.thetiptop.app.dto.GainDto;
 import fr.thetiptop.app.mapper.GainMapper;
 import fr.thetiptop.app.models.GainModel;
@@ -17,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DefaultGainService implements GainService {
@@ -92,11 +94,28 @@ public class DefaultGainService implements GainService {
 
     private List<GainModel> findAvailableGains() {
         List<GainModel> gains = gainRepository.findAll();
+        List<GainDistributionDto> gainsDistribution = findCurrentDistributionPercentage();
 
         if (CollectionUtils.isEmpty(gains)) {
             return null;
         }
 
-        return gains;
+        List<Long> overUsedGainIds = gainsDistribution.stream()
+                .filter(gainDistributionDto -> gainDistributionDto.getCurrentDistribution() >= gainDistributionDto.getTargetDistribution())
+                .map(gainDistributionDto -> gainDistributionDto.getId())
+                .collect(Collectors.toList());
+
+
+        List<GainModel> availableGains = gains.stream()
+                .filter(gainModel -> !overUsedGainIds.contains(gainModel.getId()))
+                .collect(Collectors.toList());
+
+        logger.debug(String.format("Current available gains to assign '%s'", String.join(",", availableGains.stream().map(gain -> gain.getTitle()).collect(Collectors.toList()))));
+
+        return availableGains;
+    }
+
+    private List<GainDistributionDto> findCurrentDistributionPercentage() {
+        return gainRepository.findCurrentDistributionPercentage();
     }
 }
