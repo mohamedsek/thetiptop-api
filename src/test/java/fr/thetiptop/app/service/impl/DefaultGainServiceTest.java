@@ -1,5 +1,6 @@
 package fr.thetiptop.app.service.impl;
 
+import fr.thetiptop.app.dto.GainDto;
 import fr.thetiptop.app.exceptions.InvalidGameDateException;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.GainRepository;
@@ -32,7 +33,6 @@ public class DefaultGainServiceTest {
 
     private static final String TICKET_CODE = "12345-12345";
 
-
     @Test
     public void testGenerateGain_dateInvalid() {
 
@@ -43,6 +43,15 @@ public class DefaultGainServiceTest {
         Assertions.assertThrows(InvalidGameDateException.class, () -> {
             gainService.generateGain(TICKET_CODE);
         });
+    }
+
+    @Test
+    public void testGenerateGain_ticketCodeNotFound() {
+
+        Mockito.when(ticketService.findByCode("11111-11111")).thenReturn(Optional.empty());
+        GainDto gainDto = gainService.generateGain("11111-11111");
+
+        Assertions.assertNull(gainDto, "Should Return null when ticket not found");
     }
 
 }
