@@ -2,6 +2,7 @@ package fr.thetiptop.app.service.impl;
 
 import fr.thetiptop.app.dto.GainDistributionDto;
 import fr.thetiptop.app.dto.GainDto;
+import fr.thetiptop.app.exceptions.InvalidGameDateException;
 import fr.thetiptop.app.mapper.GainMapper;
 import fr.thetiptop.app.models.GainModel;
 import fr.thetiptop.app.models.TicketModel;
@@ -31,8 +32,9 @@ public class DefaultGainService implements GainService {
     private TicketService ticketService;
     private GainRepository gainRepository;
 
-    public DefaultGainService(TicketService ticketService) {
+    public DefaultGainService(TicketService ticketService, GainRepository gainRepository) {
         this.ticketService = ticketService;
+        this.gainRepository = gainRepository;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class DefaultGainService implements GainService {
 
         if (!isGameActive()) {
             logger.warn("The game is not available at this date.");
-            throw new RuntimeException("The game is not available at this date.");
+            throw new InvalidGameDateException("The game is not available at this date.");
         }
 
         // TODO: Assign Client to ticket
