@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class DefaultTicketService implements TicketService {
@@ -45,6 +46,13 @@ public class DefaultTicketService implements TicketService {
         ticketModel.setUsed(Boolean.FALSE);
 
         return ticketRepository.save(ticketModel);
+    }
+
+    @Override
+    public Optional<TicketModel> findByCode(String ticketCode) {
+        Optional<TicketModel> ticketModel = ticketRepository.findByCode(ticketCode);
+
+        return ticketModel;
     }
 
     private String generateCode() {
