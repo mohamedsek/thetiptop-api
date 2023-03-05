@@ -109,8 +109,14 @@ public class DefaultGainService implements GainService {
 
 
         List<GainModel> availableGains = gains.stream()
-                .filter(gainModel -> !overUsedGainIds.contains(gainModel.getId()))
+                .filter(gainModel -> !overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance()>0 )
                 .collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(availableGains)) {
+            availableGains = gains.stream()
+                    .filter(gainModel -> overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance()>0 )
+                    .collect(Collectors.toList());
+        }
 
         logger.debug(String.format("Current available gains to assign '%s'", String.join(",", availableGains.stream().map(gain -> gain.getTitle()).collect(Collectors.toList()))));
 
