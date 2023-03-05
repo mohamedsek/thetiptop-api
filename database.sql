@@ -17,6 +17,6 @@ INSERT INTO `game_contest`.`gain` (`id`,`chance`, `title`) VALUES (5, '4', 'un c
 INSERT INTO `game_contest`.`gain` (`id`,`chance`, `title`) VALUES (6, '0', 'un an de thé d’une valeur de 360€');
 
 <!-- USER ROLES -->
-INSERT INTO `game_contest`.`user_role` (`id`, `name`) VALUES ('1', 'CLIENT');
+INSERT INTO `game_contest`.`user_role` (`id`, `name`) VALUES ('4', 'ROLE_CUSTOMER');
 INSERT INTO `game_contest`.`user_role` (`id`, `name`) VALUES ('2', 'ADMIN');
 INSERT INTO `game_contest`.`user_role` (`id`, `name`) VALUES ('3', 'CHECKOUTMACHINE');

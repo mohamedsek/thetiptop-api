@@ -47,7 +47,7 @@ public class DefaultGainService implements GainService {
             return null;
         }
 
-        if (ticketModel.get().getParticipating()) {
+        if (ticketModel.get().getIsParticipating()) {
             logger.debug(String.format("Ticket code '%s' has already gain assigned returning result.", code));
             return GainMapper.INSTANCE.gainToGainDto(ticketModel.get().getGain());
         }
@@ -74,7 +74,7 @@ public class DefaultGainService implements GainService {
         logger.info(String.format("Selected gain to assign '%s'", randomGainModel.getTitle()));
 
         // assign gain
-        ticketModel.setParticipating(Boolean.TRUE);
+        ticketModel.setIsParticipating(Boolean.TRUE);
         ticketModel.setGain(randomGainModel);
 
         ticketService.save(ticketModel);
