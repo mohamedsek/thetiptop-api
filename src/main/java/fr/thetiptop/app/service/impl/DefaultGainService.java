@@ -123,7 +123,8 @@ public class DefaultGainService implements GainService {
         return availableGains;
     }
 
-    private List<GainDistributionDto> findCurrentDistributionPercentage() {
+    @Override
+    public List<GainDistributionDto> findCurrentDistributionPercentage() {
         return gainRepository.findCurrentDistributionPercentage();
     }
 }
