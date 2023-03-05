@@ -1,4 +1,4 @@
-package fr.thetiptop.app.dto;
+package fr.thetiptop.app.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private String email;
-    private String uid;
-    private String firstName;
-    private String lastName;
+public class AuthResponseDto {
+    private String accessToken;
+
+
 }

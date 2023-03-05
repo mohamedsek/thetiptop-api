@@ -42,8 +42,8 @@ public class DefaultTicketService implements TicketService {
 
         TicketModel ticketModel = new TicketModel();
         ticketModel.setCode(generateCode());
-        ticketModel.setParticipating(Boolean.FALSE);
-        ticketModel.setUsed(Boolean.FALSE);
+        ticketModel.setIsParticipating(Boolean.FALSE);
+        ticketModel.setIsUsed(Boolean.FALSE);
 
         return ticketRepository.save(ticketModel);
     }

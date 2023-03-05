@@ -1,14 +1,21 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Entity(name = "Client")
+@Data
+@NoArgsConstructor
 public class ClientModel extends UserModel {
-
-    @Column(nullable = false)
-    protected String fullname;
+    @Builder
+    public ClientModel(Long id, String email, String uid, String firstName, String lastName, String password, UserRoleModel role, boolean enabled, AuthenticationProvider authenticationProvider, List<TicketModel> tickets, String providerId) {
+        super(id, email, uid, firstName, lastName, password, role, enabled);
+        this.authenticationProvider = authenticationProvider;
+        this.tickets = tickets;
+        this.providerId = providerId;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")
@@ -19,36 +26,4 @@ public class ClientModel extends UserModel {
 
     @Column(nullable = true)
     private String providerId;
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public List<TicketModel> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketModel> tickets) {
-        this.tickets = tickets;
-    }
-
-    public AuthenticationProvider getAuthenticationProvider() {
-        return authenticationProvider;
-    }
-
-    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
 }
