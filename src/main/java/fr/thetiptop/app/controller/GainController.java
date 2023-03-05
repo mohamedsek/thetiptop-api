@@ -20,9 +20,6 @@ public class GainController {
         this.gainService = gainService;
     }
 
-    @Autowired
-    private GainRepository gainRepository;
-
     @GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GainDistributionDto>> getGainsStats() {
         List<GainDistributionDto> gainDistributionDto = gainService.findCurrentDistributionPercentage();
