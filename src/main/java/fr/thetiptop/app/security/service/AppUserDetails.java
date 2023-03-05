@@ -9,16 +9,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDetails implements UserDetails {
+@Data
+public class AppUserDetails implements UserDetails, OAuth2User {
 
     private Long id;
     private String email;
@@ -26,6 +25,7 @@ public class AppUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
+    private Map<String, Object> attributes;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
@@ -65,7 +65,13 @@ public class AppUserDetails implements UserDetails {
         return uid;
     }
 
-    public UserDetails create(UserModel user) {
+    @Override
+    public String getName() {
+        return getUid();
+    }
+
+
+    public static UserDetails create(UserModel user) {
         List<SimpleGrantedAuthority> authorities = getAuthorities(user);
         return AppUserDetails.builder()
                 .authorities(authorities)
@@ -81,5 +87,11 @@ public class AppUserDetails implements UserDetails {
             return List.of(new SimpleGrantedAuthority(user.getRole().getName()));
         }
         return Collections.emptyList();
+    }
+
+    public static OAuth2User create(UserModel user, Map<String, Object> attributes) {
+        AppUserDetails userDetails = (AppUserDetails) AppUserDetails.create(user);
+        userDetails.setAttributes(attributes);
+        return userDetails;
     }
 }

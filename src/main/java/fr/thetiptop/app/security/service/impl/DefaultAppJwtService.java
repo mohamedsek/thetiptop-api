@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,10 +27,11 @@ public class DefaultAppJwtService implements AppJwtService {
     private String appName;
 
     @Override
-    public String createJwt(AppUserDetails appUserDetails) {
+    public String createJwt(final Authentication authentication) {
+        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
         String token = Jwts.builder()
                 .setIssuer(this.appName)
-                .setSubject(appUserDetails.getUid())
+                .setSubject(userDetails.getUid())
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(propertiesConfig.getJwt().getMinuteExpireTime(), ChronoUnit.MINUTES)))
                 .signWith(
@@ -69,7 +71,4 @@ public class DefaultAppJwtService implements AppJwtService {
         return false;
     }
 
-    public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
-        this.propertiesConfig = propertiesConfig;
-    }
 }
