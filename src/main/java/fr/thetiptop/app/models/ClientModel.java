@@ -1,10 +1,18 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity(name = "Client")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClientModel extends UserModel {
 
     @Column(nullable = false)
@@ -19,36 +27,4 @@ public class ClientModel extends UserModel {
 
     @Column(nullable = true)
     private String providerId;
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public List<TicketModel> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketModel> tickets) {
-        this.tickets = tickets;
-    }
-
-    public AuthenticationProvider getAuthenticationProvider() {
-        return authenticationProvider;
-    }
-
-    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
 }

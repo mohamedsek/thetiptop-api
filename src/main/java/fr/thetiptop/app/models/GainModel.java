@@ -1,10 +1,18 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity(name = "Gain")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GainModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,36 +26,4 @@ public class GainModel {
 
     @OneToMany(mappedBy = "gain")
     private List<TicketModel> tickets;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public double getChance() {
-        return chance;
-    }
-
-    public void setChance(double chance) {
-        this.chance = chance;
-    }
-
-    public List<TicketModel> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketModel> tickets) {
-        this.tickets = tickets;
-    }
 }
