@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
-//                .httpBasic().disable()
+                .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers("/error",
                         "/*/*.jpg",
