@@ -1,13 +1,11 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.Entity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity(name = "Administrator")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class AdminModel extends UserModel {
 
     @Builder

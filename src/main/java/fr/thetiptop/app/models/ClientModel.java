@@ -1,16 +1,13 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity(name = "Client")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class ClientModel extends UserModel {
     @Builder
     public ClientModel(Long id, String email, String uid, String firstName, String lastName, String password, UserRoleModel role, boolean enabled, AuthenticationProvider authenticationProvider, List<TicketModel> tickets, String providerId) {

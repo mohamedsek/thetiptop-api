@@ -11,10 +11,14 @@ import fr.thetiptop.app.models.UserModel;
 import fr.thetiptop.app.models.UserRoleModel;
 import fr.thetiptop.app.repository.UserRepository;
 import fr.thetiptop.app.repository.UserRoleRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,5 +72,13 @@ public class DefaultUserFacade implements UserFacade {
                 .build();
         UserModel save = userRepository.save(userModel);
         return UserMapper.INSTANCE.mapToDto(save);
+    }
+    @Override
+    public Optional<UserDto> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.nonNull(authentication) && StringUtils.isNotBlank(authentication.getName())) {
+            return this.findByEmail(authentication.getName());
+        }
+        return Optional.empty();
     }
 }

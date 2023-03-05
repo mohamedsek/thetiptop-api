@@ -8,6 +8,7 @@ import fr.thetiptop.app.dto.auth.SignUpRequestDto;
 import fr.thetiptop.app.facades.UserFacade;
 import fr.thetiptop.app.security.service.AppJwtService;
 import fr.thetiptop.app.security.service.AppUserDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-//@Tag(name = "Authentication/Registration", description = "Authentication/Registration")
+@Tag(name = "Authentication/Registration", description = "Authentication/Registration")
 public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
@@ -58,6 +58,12 @@ public class AuthenticationController {
         }
         UserDto register = userFacade.registerClient(signUpRequestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<?> getUserInfo() {
+        Optional<UserDto> currentUser = userFacade.getCurrentUser();
+        return ResponseEntity.ok(currentUser);
     }
 }
 

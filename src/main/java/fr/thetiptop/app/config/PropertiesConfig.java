@@ -2,11 +2,12 @@ package fr.thetiptop.app.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
-@Data
+@Getter
 public class PropertiesConfig {
     private final Cors cors = new Cors();
     private final Jwt jwt = new Jwt();

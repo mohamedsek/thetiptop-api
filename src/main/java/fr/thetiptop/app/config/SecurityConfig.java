@@ -42,16 +42,8 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .requestMatchers("/error",
-                        "/*/*.jpg",
-                        "/*/*.png",
-                        "/*/*.svg",
-                        "/*/*.gif",
-                        "/*/*.html",
-                        "/*/*.css",
-                        "/*/*.js",
-                        "/doc/*").permitAll()
-                .requestMatchers("/auth/*", "/auth2/*").permitAll()
+                .requestMatchers("/error/**","/doc/**").permitAll()
+                .requestMatchers("/auth/**", "/auth2/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
