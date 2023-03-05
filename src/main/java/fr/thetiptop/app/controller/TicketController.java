@@ -2,7 +2,9 @@ package fr.thetiptop.app.controller;
 
 import fr.thetiptop.app.dto.GainDto;
 import fr.thetiptop.app.dto.TicketDto;
+import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.mapper.TicketMapper;
+import fr.thetiptop.app.mapper.UserMapper;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.service.GainService;
 import fr.thetiptop.app.service.TicketService;
@@ -38,6 +40,13 @@ public class TicketController {
         final GainDto gainDto = gainService.generateGain(code);
 
         return new ResponseEntity<GainDto>(gainDto, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/jackpot", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> selectJackpotWinner() {
+        final UserDto winner = UserMapper.INSTANCE.clientToUserDto(gainService.selectJackpotWinner());
+
+        return new ResponseEntity<UserDto>(winner, HttpStatus.CREATED);
     }
 
 }
