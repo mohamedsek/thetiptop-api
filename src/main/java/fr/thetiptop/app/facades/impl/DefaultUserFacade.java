@@ -1,6 +1,7 @@
 package fr.thetiptop.app.facades.impl;
 
 
+import fr.thetiptop.app.constant.Constants;
 import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.dto.auth.SignUpRequestDto;
 import fr.thetiptop.app.facades.UserFacade;
@@ -19,8 +20,6 @@ import java.util.UUID;
 
 @Service
 public class DefaultUserFacade implements UserFacade {
-
-    public static final String ROLE_USER = "ROLE_USER";
     @Autowired
     private UserRepository userRepository;
 
@@ -57,7 +56,7 @@ public class DefaultUserFacade implements UserFacade {
 
     @Override
     public UserDto registerClient(SignUpRequestDto signUpRequestDto) {
-        Optional<UserRoleModel> roleUser = userRoleRepository.findByName(ROLE_USER);
+        Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.CUSTOMER);
         ClientModel userModel = ClientModel.builder()
                 .email(signUpRequestDto.getEmail())
                 .firstName(signUpRequestDto.getFirstName())
