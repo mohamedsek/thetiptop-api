@@ -15,9 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ClientModel extends UserModel {
 
-    @Column(nullable = false)
-    protected String fullname;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")
     private AuthenticationProvider authenticationProvider;
