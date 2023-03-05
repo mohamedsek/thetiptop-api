@@ -1,7 +1,10 @@
 package fr.thetiptop.app.security.service;
 
+import org.springframework.security.core.Authentication;
+
 public interface AppJwtService {
-    String createJwt(AppUserDetails appUserDetails);
+
+    String createJwt(Authentication authentication);
 
     String getUid(String token);
 

@@ -40,7 +40,7 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@Valid @RequestBody SignInRequestDto signInRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = appJwtService.createJwt((AppUserDetails) authentication.getPrincipal());
+        String token = appJwtService.createJwt(authentication);
         return ResponseEntity.ok(AuthResponseDto.builder().accessToken(token).build());
     }
 
