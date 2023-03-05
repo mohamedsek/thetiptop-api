@@ -2,6 +2,10 @@ package fr.thetiptop.app.config;
 
 import fr.thetiptop.app.security.JwtAuthenticationEntryPoint;
 import fr.thetiptop.app.security.filter.JwtAuthenticationFilter;
+import fr.thetiptop.app.security.oauth2.AppOAuth2UserService;
+import fr.thetiptop.app.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import fr.thetiptop.app.security.oauth2.OAuth2AuthenticationFailureHandler;
+import fr.thetiptop.app.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import fr.thetiptop.app.security.service.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +35,17 @@ public class SecurityConfig {
     @Autowired
     private AppUserDetailsService appUserDetailsService;
     @Autowired
+    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    @Autowired
+    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    @Autowired
+    private AppOAuth2UserService appOAuth2UserService;
+
+    @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -42,7 +56,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .requestMatchers("/error/**","/doc/**").permitAll()
+                .requestMatchers("/error/**", "/doc/**").permitAll()
                 .requestMatchers("/auth/**", "/auth2/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -51,8 +65,21 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login()
+                .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                .and()
+                .redirectionEndpoint()
+                    .baseUri("/oauth2/callback/*")
+                .and()
+                    .userInfoEndpoint()
+                .userService(appOAuth2UserService)
+                .and()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler);
 
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
