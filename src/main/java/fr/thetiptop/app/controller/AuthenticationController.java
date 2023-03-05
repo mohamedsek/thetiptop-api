@@ -6,8 +6,8 @@ import fr.thetiptop.app.dto.auth.AuthResponseDto;
 import fr.thetiptop.app.dto.auth.SignInRequestDto;
 import fr.thetiptop.app.dto.auth.SignUpRequestDto;
 import fr.thetiptop.app.facades.UserFacade;
-import fr.thetiptop.app.security.AppJwtService;
-import fr.thetiptop.app.security.AppUserDetails;
+import fr.thetiptop.app.security.service.AppJwtService;
+import fr.thetiptop.app.security.service.AppUserDetails;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
+    public ResponseEntity<?> registerNewClient(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
 
         // TODO add signUpRequestDto validation
         if (userFacade.existsByEmail(signUpRequestDto.getEmail())) {
@@ -56,7 +56,7 @@ public class AuthenticationController {
                 || !StringUtils.equalsAnyIgnoreCase(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
             return ResponseEntity.badRequest().build();
         }
-        UserDto register = userFacade.register(signUpRequestDto);
+        UserDto register = userFacade.registerClient(signUpRequestDto);
         return ResponseEntity.ok().build();
     }
 }

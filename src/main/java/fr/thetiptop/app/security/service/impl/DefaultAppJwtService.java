@@ -1,8 +1,8 @@
 package fr.thetiptop.app.security.service.impl;
 
 import fr.thetiptop.app.config.PropertiesConfig;
-import fr.thetiptop.app.security.AppJwtService;
-import fr.thetiptop.app.security.AppUserDetails;
+import fr.thetiptop.app.security.service.AppJwtService;
+import fr.thetiptop.app.security.service.AppUserDetails;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

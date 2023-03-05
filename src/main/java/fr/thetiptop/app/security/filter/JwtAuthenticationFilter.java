@@ -1,8 +1,8 @@
 package fr.thetiptop.app.security.filter;
 
 
-import fr.thetiptop.app.security.AppJwtService;
-import fr.thetiptop.app.security.AppUserDetails;
+import fr.thetiptop.app.security.service.AppJwtService;
+import fr.thetiptop.app.security.service.AppUserDetails;
 import fr.thetiptop.app.security.service.AppUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

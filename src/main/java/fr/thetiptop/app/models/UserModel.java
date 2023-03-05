@@ -3,17 +3,13 @@ package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity(name = "User")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public abstract class UserModel {
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
@@ -31,6 +27,4 @@ public abstract class UserModel {
     @ManyToOne(optional = false)
     protected UserRoleModel role;
     private boolean enabled;
-
-
 }

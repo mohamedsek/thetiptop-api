@@ -1,19 +1,24 @@
 package fr.thetiptop.app.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity(name = "Client")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class ClientModel extends UserModel {
+    @Builder
+    public ClientModel(Long id, String email, String uid, String firstName, String lastName, String password, UserRoleModel role, boolean enabled, AuthenticationProvider authenticationProvider, List<TicketModel> tickets, String providerId) {
+        super(id, email, uid, firstName, lastName, password, role, enabled);
+        this.authenticationProvider = authenticationProvider;
+        this.tickets = tickets;
+        this.providerId = providerId;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_type")

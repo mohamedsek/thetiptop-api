@@ -3,7 +3,7 @@ package fr.thetiptop.app.security.service.impl;
 
 import fr.thetiptop.app.models.UserModel;
 import fr.thetiptop.app.repository.UserRepository;
-import fr.thetiptop.app.security.AppUserDetails;
+import fr.thetiptop.app.security.service.AppUserDetails;
 import fr.thetiptop.app.security.service.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

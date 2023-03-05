@@ -1,4 +1,4 @@
-package fr.thetiptop.app.security;
+package fr.thetiptop.app.security.service;
 
 public interface AppJwtService {
     String createJwt(AppUserDetails appUserDetails);

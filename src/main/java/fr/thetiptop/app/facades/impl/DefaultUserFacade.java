@@ -5,6 +5,7 @@ import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.dto.auth.SignUpRequestDto;
 import fr.thetiptop.app.facades.UserFacade;
 import fr.thetiptop.app.mapper.UserMapper;
+import fr.thetiptop.app.models.ClientModel;
 import fr.thetiptop.app.models.UserModel;
 import fr.thetiptop.app.models.UserRoleModel;
 import fr.thetiptop.app.repository.UserRepository;
@@ -55,9 +56,9 @@ public class DefaultUserFacade implements UserFacade {
     }
 
     @Override
-    public UserDto register(SignUpRequestDto signUpRequestDto) {
+    public UserDto registerClient(SignUpRequestDto signUpRequestDto) {
         Optional<UserRoleModel> roleUser = userRoleRepository.findByName(ROLE_USER);
-        UserModel userModel = UserModel.builder()
+        ClientModel userModel = ClientModel.builder()
                 .email(signUpRequestDto.getEmail())
                 .firstName(signUpRequestDto.getFirstName())
                 .lastName(signUpRequestDto.getLastName())

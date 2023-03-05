@@ -15,7 +15,7 @@ public interface UserFacade {
 
     Optional<UserDto> findByUid(String uid);
 
-    UserDto register(SignUpRequestDto signUpRequestDto);
+    UserDto registerClient(SignUpRequestDto signUpRequestDto);
 
 
 }
