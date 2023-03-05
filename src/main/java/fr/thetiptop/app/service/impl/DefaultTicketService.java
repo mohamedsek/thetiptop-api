@@ -60,6 +60,13 @@ public class DefaultTicketService implements TicketService {
         return ticketRepository.save(ticketModel);
     }
 
+    public void removeJackpotTicket() {
+        Optional<TicketModel> jackpotTicket = this.findByCode(JACKPOT_TICKET_CODE);
+        if (jackpotTicket.isPresent()) {
+            logger.info(String.format("Clearing previous jackpot winner ticket '%s' assigned to '%s'", jackpotTicket.get().getCode(), jackpotTicket.get().getClient().getEmail()));
+            ticketRepository.delete(jackpotTicket.get());
+        }
+    }
     private String generateCode() {
         StringBuilder sb = new StringBuilder();
         sb.append(generateRandomBloc());
