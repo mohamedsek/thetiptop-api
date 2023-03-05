@@ -52,19 +52,15 @@ public class DefaultTicketService implements TicketService {
         sb.append(generateRandomBloc());
         sb.append("-");
         sb.append(generateRandomBloc());
-        sb.append("-");
-        sb.append(generateRandomBloc());
-        sb.append("-");
-        sb.append(generateRandomBloc());
 
         return sb.toString();
     }
 
     private String generateRandomBloc() {
         int min = 1;
-        int max = 9999;
+        int max = 99999;
         int randomNumber = GameUtil.randomValue(min, max + 1);
-        return String.format("%04d", randomNumber);
+        return String.format("%05d", randomNumber);
     }
 
     private Boolean canGenerateTicket() {
