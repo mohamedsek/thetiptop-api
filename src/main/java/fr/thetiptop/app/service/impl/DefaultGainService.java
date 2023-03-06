@@ -3,7 +3,9 @@ package fr.thetiptop.app.service.impl;
 import fr.thetiptop.app.dto.GainDistributionDto;
 import fr.thetiptop.app.dto.GainDto;
 import fr.thetiptop.app.exceptions.InvalidGameDateException;
+import fr.thetiptop.app.facades.UserFacade;
 import fr.thetiptop.app.mapper.GainMapper;
+import fr.thetiptop.app.models.ClientModel;
 import fr.thetiptop.app.models.GainModel;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.GainRepository;
@@ -32,9 +34,12 @@ public class DefaultGainService implements GainService {
     private TicketService ticketService;
     private GainRepository gainRepository;
 
-    public DefaultGainService(TicketService ticketService, GainRepository gainRepository) {
+    private UserFacade userFacade;
+
+    public DefaultGainService(TicketService ticketService, GainRepository gainRepository, UserFacade userFacade) {
         this.ticketService = ticketService;
         this.gainRepository = gainRepository;
+        this.userFacade = userFacade;
     }
 
     @Override
@@ -80,6 +85,30 @@ public class DefaultGainService implements GainService {
         ticketService.save(ticketModel);
 
         return randomGainModel;
+    }
+
+    @Override
+    public ClientModel selectJackpotWinner(){
+        logger.info("Selecting jackpot winner.");
+        clearJackpotWinnerIfExist();
+        ClientModel winnerClient = userFacade.getRandomClient();
+        GainModel jackpotGain = gainRepository.findOneByChance(0);
+
+        TicketModel winnerTicket = new TicketModel();
+        winnerTicket.setCode(TicketService.JACKPOT_TICKET_CODE);
+        winnerTicket.setIsParticipating(Boolean.TRUE);
+        winnerTicket.setIsUsed(Boolean.FALSE);
+        winnerTicket.setClient(winnerClient);
+        winnerTicket.setGain(jackpotGain);
+
+        ticketService.save(winnerTicket);
+
+        logger.info(String.format("Jackpot ticket winner is '%s'", winnerClient.getEmail()));
+
+        return winnerClient;
+    }
+    private void clearJackpotWinnerIfExist() {
+        ticketService.removeJackpotTicket();
     }
 
     private Boolean isGameActive() {
