@@ -9,9 +9,13 @@ import fr.thetiptop.app.mapper.UserMapper;
 import fr.thetiptop.app.models.ClientModel;
 import fr.thetiptop.app.models.UserModel;
 import fr.thetiptop.app.models.UserRoleModel;
+import fr.thetiptop.app.repository.ClientRepository;
 import fr.thetiptop.app.repository.UserRepository;
 import fr.thetiptop.app.repository.UserRoleRepository;
+import fr.thetiptop.app.util.GameUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +28,12 @@ import java.util.UUID;
 
 @Service
 public class DefaultUserFacade implements UserFacade {
+    private final Log logger = LogFactory.getLog(this.getClass());
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Autowired
     private UserRoleRepository userRoleRepository;
@@ -33,6 +41,15 @@ public class DefaultUserFacade implements UserFacade {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    @Override
+    public ClientModel getRandomClient() {
+        // TODO : Fix count participating clients only
+        long clientsCount = clientRepository.count();
+        int selectRowIndex = GameUtil.randomValue(0, Long.valueOf(clientsCount).intValue());
+        logger.debug("selected random client index: " + selectRowIndex);
+        return clientRepository.findRandomClientParticipating(selectRowIndex);
+    }
     @Override
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
