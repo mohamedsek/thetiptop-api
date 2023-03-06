@@ -44,7 +44,7 @@ public class TicketController {
 
     @PostMapping(value = "/jackpot", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> selectJackpotWinner() {
-        final UserDto winner = UserMapper.INSTANCE.clientToUserDto(gainService.selectJackpotWinner());
+        final UserDto winner = UserMapper.INSTANCE.mapToDto(gainService.selectJackpotWinner());
 
         return new ResponseEntity<UserDto>(winner, HttpStatus.CREATED);
     }
