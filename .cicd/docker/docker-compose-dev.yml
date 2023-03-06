@@ -18,3 +18,5 @@ services:
       - traefik.http.services.api-thetiptop-dev.loadbalancer.server.port=8080
     networks:
       - web
+    volumes:
+      - "/var/log/thetiptop-api/dev:/var/log/thetiptop-api"
