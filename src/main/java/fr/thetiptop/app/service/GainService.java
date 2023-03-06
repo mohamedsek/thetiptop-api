@@ -11,5 +11,7 @@ import java.util.List;
 public interface GainService {
     GainDto generateGain(String ticketCode);
 
+    ClientModel selectJackpotWinner();
+
     List<GainDistributionDto> findCurrentDistributionPercentage();
 }
