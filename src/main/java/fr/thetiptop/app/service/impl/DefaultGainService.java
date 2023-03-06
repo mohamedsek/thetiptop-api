@@ -92,6 +92,18 @@ public class DefaultGainService implements GainService {
         logger.info("Selecting jackpot winner.");
         clearJackpotWinnerIfExist();
         ClientModel winnerClient = userFacade.getRandomClient();
+        GainModel jackpotGain = gainRepository.findOneByChance(0);
+
+        TicketModel winnerTicket = new TicketModel();
+        winnerTicket.setCode(TicketService.JACKPOT_TICKET_CODE);
+        winnerTicket.setIsParticipating(Boolean.TRUE);
+        winnerTicket.setIsUsed(Boolean.FALSE);
+        winnerTicket.setClient(winnerClient);
+        winnerTicket.setGain(jackpotGain);
+
+        ticketService.save(winnerTicket);
+
+        logger.info(String.format("Jackpot ticket winner is '%s'", winnerClient.getEmail()));
 
         return winnerClient;
     }

@@ -18,4 +18,7 @@ public interface GainRepository extends JpaRepository<GainModel, Long> {
             "WHERE t.is_participating = true \n" +
             "GROUP BY g.id, g.title, g.chance, STP.totalParticipating", nativeQuery = true)
     List<GainDistributionDto> findCurrentDistributionPercentage();
+
+    GainModel findOneByChance(double chanceValue);
+
 }
