@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequestDto {
-    @Email
-    @NotBlank
+    @Email(message = "L'adresse email est invalide.")
+    @NotBlank(message = "L'adresse email est obligatoire.")
     private String email;
-    @NotBlank
+    @NotBlank(message = "Le prénom est obligatoire.")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Le nom est obligatoire.")
     private String lastName;
-    @NotBlank
+    @NotBlank(message = "Le mot de passe est obligatoire.")
     private String password;
-    @NotBlank
+    @NotBlank(message = "La Confirmation du mot de passe est obligatoire.")
     private String confirmPassword;
 
 
