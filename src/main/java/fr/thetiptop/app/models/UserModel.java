@@ -21,7 +21,7 @@ public class UserModel {
     protected String uid;
     @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String lastName;
 
     @Column(nullable = true)
