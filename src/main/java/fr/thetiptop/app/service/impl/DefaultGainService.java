@@ -175,18 +175,5 @@ public class DefaultGainService implements GainService {
         return gainRepository.findCurrentDistributionPercentage();
     }
 
-    @Override
-    public List<GainDto> find() {
-        logger.info("Searching for gains ...");
-        List<GainModel> gains = gainRepository.findAll();
-
-        if (CollectionUtils.isEmpty(gains)) {
-            logger.info("No gain found ...");
-            throw new RuntimeException("No gain found");
-        }
-        logger.info(String.format("Found gains '%s'", gains));
-
-        return gains.stream().map(gain -> GainMapper.INSTANCE.gainToGainDto(gain)).collect(Collectors.toList());
-    }
 
 }
