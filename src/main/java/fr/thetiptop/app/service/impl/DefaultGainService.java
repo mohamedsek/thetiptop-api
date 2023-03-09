@@ -9,6 +9,8 @@ import fr.thetiptop.app.models.ClientModel;
 import fr.thetiptop.app.models.GainModel;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.GainRepository;
+import fr.thetiptop.app.service.ClientService;
+import fr.thetiptop.app.service.CustomUserService;
 import fr.thetiptop.app.service.GainService;
 import fr.thetiptop.app.service.TicketService;
 import fr.thetiptop.app.util.GameUtil;
@@ -36,10 +38,16 @@ public class DefaultGainService implements GainService {
 
     private UserFacade userFacade;
 
-    public DefaultGainService(TicketService ticketService, GainRepository gainRepository, UserFacade userFacade) {
+    private CustomUserService customUserService;
+
+    private ClientService clientService;
+
+    public DefaultGainService(TicketService ticketService, GainRepository gainRepository, UserFacade userFacade, CustomUserService customUserService, ClientService clientService) {
         this.ticketService = ticketService;
         this.gainRepository = gainRepository;
         this.userFacade = userFacade;
+        this.customUserService = customUserService;
+        this.clientService = clientService;
     }
 
     @Override
@@ -68,7 +76,16 @@ public class DefaultGainService implements GainService {
             throw new InvalidGameDateException("The game is not available at this date.");
         }
 
-        // TODO: Assign Client to ticket
+
+        // assign client
+        String email = customUserService.getCurrentUsername();
+        ClientModel currentUser = clientService.findByEmail(email);
+
+        if (currentUser == null) {
+            logger.error("User should exist and should be of type Client/Customer");
+            throw new IllegalStateException("User should exist and should be of type Client/Customer");
+        }
+        ticketModel.setClient(currentUser);
 
         List<GainModel> availableGains = findAvailableGains();
 
@@ -88,7 +105,7 @@ public class DefaultGainService implements GainService {
     }
 
     @Override
-    public ClientModel selectJackpotWinner(){
+    public ClientModel selectJackpotWinner() {
         logger.info("Selecting jackpot winner.");
         clearJackpotWinnerIfExist();
         ClientModel winnerClient = userFacade.getRandomClient();
@@ -107,6 +124,7 @@ public class DefaultGainService implements GainService {
 
         return winnerClient;
     }
+
     private void clearJackpotWinnerIfExist() {
         ticketService.removeJackpotTicket();
     }
@@ -138,12 +156,12 @@ public class DefaultGainService implements GainService {
 
 
         List<GainModel> availableGains = gains.stream()
-                .filter(gainModel -> !overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance()>0 )
+                .filter(gainModel -> !overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance() > 0)
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(availableGains)) {
             availableGains = gains.stream()
-                    .filter(gainModel -> overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance()>0 )
+                    .filter(gainModel -> overUsedGainIds.contains(gainModel.getId()) && gainModel.getChance() > 0)
                     .collect(Collectors.toList());
         }
 
@@ -156,4 +174,19 @@ public class DefaultGainService implements GainService {
     public List<GainDistributionDto> findCurrentDistributionPercentage() {
         return gainRepository.findCurrentDistributionPercentage();
     }
+
+    @Override
+    public List<GainDto> find() {
+        logger.info("Searching for gains ...");
+        List<GainModel> gains = gainRepository.findAll();
+
+        if (CollectionUtils.isEmpty(gains)) {
+            logger.info("No gain found ...");
+            throw new RuntimeException("No gain found");
+        }
+        logger.info(String.format("Found gains '%s'", gains));
+
+        return gains.stream().map(gain -> GainMapper.INSTANCE.gainToGainDto(gain)).collect(Collectors.toList());
+    }
+
 }
