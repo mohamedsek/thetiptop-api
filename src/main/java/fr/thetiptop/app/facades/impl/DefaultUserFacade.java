@@ -104,6 +104,21 @@ public class DefaultUserFacade implements UserFacade {
         return UserMapper.INSTANCE.mapToDto(save);
     }
 
+    public UserDto registerAdmin(SignUpRequestDto signUpRequestDto) {
+        Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.ADMIN);
+        UserModel adminModel = AdminModel.builder()
+                .email(signUpRequestDto.getEmail())
+                .firstName(signUpRequestDto.getFirstName())
+                .lastName(signUpRequestDto.getLastName())
+                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
+                .uid(UUID.randomUUID().toString())
+                .role(roleUser.get())
+                .enabled(true)
+                .build();
+        UserModel save = userRepository.save(adminModel);
+        return UserMapper.INSTANCE.mapToDto(save);
+    }
+
     @Override
     public Optional<UserDto> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
