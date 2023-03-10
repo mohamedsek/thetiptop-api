@@ -1,6 +1,7 @@
 package fr.thetiptop.app.security.service;
 
 
+import fr.thetiptop.app.constant.Constants;
 import fr.thetiptop.app.models.UserModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -84,7 +85,7 @@ public class AppUserDetails implements UserDetails, OAuth2User {
 
     private static List<SimpleGrantedAuthority> getAuthorities(UserModel user) {
         if (Objects.nonNull(user)) {
-            return List.of(new SimpleGrantedAuthority(user.getRole().getName()));
+            return List.of(new SimpleGrantedAuthority(Constants.Roles.ROLE_PREFIX + user.getRole().getName()));
         }
         return Collections.emptyList();
     }

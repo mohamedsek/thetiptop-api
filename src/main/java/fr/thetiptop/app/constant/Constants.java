@@ -6,9 +6,10 @@ public class Constants {
     }
 
     public static class Roles {
-        public static final String CUSTOMER = "ROLE_CUSTOMER";
-        public static final String CHECKOUT_MACHINE = "ROLE_CHECKOUT_MACHINE";
-        public static final String ADMIN = "ROLE_ADMIN";
+        public static final String CUSTOMER = "CUSTOMER";
+        public static final String CHECKOUT_MACHINE = "CHECKOUT_MACHINE";
+        public static final String ADMIN = "ADMIN";
+        public static final String ROLE_PREFIX = "ROLE_";
 
     }
 

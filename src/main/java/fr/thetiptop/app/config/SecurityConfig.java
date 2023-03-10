@@ -1,5 +1,6 @@
 package fr.thetiptop.app.config;
 
+import fr.thetiptop.app.constant.Constants;
 import fr.thetiptop.app.security.JwtAuthenticationEntryPoint;
 import fr.thetiptop.app.security.filter.JwtAuthenticationFilter;
 import fr.thetiptop.app.security.oauth2.AppOAuth2UserService;
@@ -56,6 +57,11 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
+                .requestMatchers("/tickets").hasRole(Constants.Roles.CHECKOUT_MACHINE)
+                .requestMatchers("/tickets/jackpot").hasRole(Constants.Roles.ADMIN)
+                .requestMatchers("/gains/stats").hasRole(Constants.Roles.ADMIN)
+                .requestMatchers("/auth/registeradmin").hasRole(Constants.Roles.ADMIN)
+                .requestMatchers("/auth/registermachine").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/error/**", "/doc/**").permitAll()
                 .requestMatchers("/auth/**", "/auth2/**").permitAll()
                 .anyRequest().authenticated()
