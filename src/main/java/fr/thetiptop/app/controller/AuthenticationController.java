@@ -71,6 +71,25 @@ public class AuthenticationController {
         return ResponseEntity.ok(SignUpResponseDto.builder().status("Success").build());
     }
 
+    @PostMapping("/registermachine")
+    public ResponseEntity<?> registerNewMachine(@Valid @RequestBody SignUpRequestDto signUpRequestDto, BindingResult bindingResult) {
+
+        if (userFacade.existsByEmail(signUpRequestDto.getEmail())) {
+            bindingResult.rejectValue("email", "emailExists", EMAIL_ALREADY_EXISTS_ERROR);
+        }
+        if (StringUtils.isBlank(signUpRequestDto.getEmail())
+                || StringUtils.isBlank(signUpRequestDto.getPassword())
+                || !StringUtils.equalsAnyIgnoreCase(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "confirmPasswordError", CONFIRM_PASSWORD_MESSAGE_ERROR);
+        }
+        if (bindingResult.hasErrors()) {
+            SignUpResponseDto failure = SignUpResponseDto.builder().status("Failure").errors(bindingResult.getAllErrors()).build();
+            return ResponseEntity.badRequest().body(failure);
+        }
+        UserDto register = userFacade.registerMachine(signUpRequestDto);
+        return ResponseEntity.ok(SignUpResponseDto.builder().status("Success").build());
+    }
+
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo() {
         Optional<UserDto> currentUser = userFacade.getCurrentUser();
