@@ -58,6 +58,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers("/tickets").hasRole(Constants.Roles.CHECKOUT_MACHINE)
+                .requestMatchers("/gains/stats").hasRole(Constants.Roles.ADMIN)
                 
                 .requestMatchers("/error/**", "/doc/**").permitAll()
                 .requestMatchers("/auth/**", "/auth2/**").permitAll()
