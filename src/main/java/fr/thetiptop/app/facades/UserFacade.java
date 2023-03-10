@@ -22,6 +22,8 @@ public interface UserFacade {
 
     UserDto registerMachine(SignUpRequestDto signUpRequestDto);
 
+    UserDto registerAdmin(SignUpRequestDto signUpRequestDto);
+
     Optional<UserDto> getCurrentUser();
 }
 
