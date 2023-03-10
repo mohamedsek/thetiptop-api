@@ -11,8 +11,8 @@ import fr.thetiptop.app.service.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +35,9 @@ public class TicketController {
         return new ResponseEntity<TicketDto>(TicketMapper.INSTANCE.ticketToTicketDto(ticketModel), HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "{code}/gain", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GainDto> assignTicketToClient(@PathVariable String code) {
-        final GainDto gainDto = gainService.generateGain(code);
+    @PostMapping(value = "/gain", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GainDto> assignTicketToClient(@RequestBody TicketDto ticketDto) {
+        final GainDto gainDto = gainService.generateGain(ticketDto.getCode());
 
         return new ResponseEntity<GainDto>(gainDto, HttpStatus.OK);
     }

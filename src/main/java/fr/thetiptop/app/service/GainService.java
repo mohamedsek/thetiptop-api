@@ -14,4 +14,5 @@ public interface GainService {
     ClientModel selectJackpotWinner();
 
     List<GainDistributionDto> findCurrentDistributionPercentage();
+
 }
