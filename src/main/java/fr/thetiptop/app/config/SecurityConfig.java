@@ -59,7 +59,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers("/tickets").hasRole(Constants.Roles.CHECKOUT_MACHINE)
                 .requestMatchers("/gains/stats").hasRole(Constants.Roles.ADMIN)
-                
+                .requestMatchers("/auth/registeradmin").hasRole(Constants.Roles.ADMIN)
+                .requestMatchers("/auth/registermachine").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/error/**", "/doc/**").permitAll()
                 .requestMatchers("/auth/**", "/auth2/**").permitAll()
                 .anyRequest().authenticated()
