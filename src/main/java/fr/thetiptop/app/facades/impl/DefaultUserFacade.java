@@ -6,9 +6,7 @@ import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.dto.auth.SignUpRequestDto;
 import fr.thetiptop.app.facades.UserFacade;
 import fr.thetiptop.app.mapper.UserMapper;
-import fr.thetiptop.app.models.ClientModel;
-import fr.thetiptop.app.models.UserModel;
-import fr.thetiptop.app.models.UserRoleModel;
+import fr.thetiptop.app.models.*;
 import fr.thetiptop.app.repository.ClientRepository;
 import fr.thetiptop.app.repository.UserRepository;
 import fr.thetiptop.app.repository.UserRoleRepository;
@@ -90,6 +88,22 @@ public class DefaultUserFacade implements UserFacade {
         UserModel save = userRepository.save(userModel);
         return UserMapper.INSTANCE.mapToDto(save);
     }
+
+    public UserDto registerMachine(SignUpRequestDto signUpRequestDto) {
+        Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.CHECKOUT_MACHINE);
+        UserModel checkoutMachineModel = CheckoutMachineModel.builder()
+                .email(signUpRequestDto.getEmail())
+                .firstName(signUpRequestDto.getFirstName())
+                .lastName(signUpRequestDto.getLastName())
+                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
+                .uid(UUID.randomUUID().toString())
+                .role(roleUser.get())
+                .enabled(true)
+                .build();
+        UserModel save = userRepository.save(checkoutMachineModel);
+        return UserMapper.INSTANCE.mapToDto(save);
+    }
+
     @Override
     public Optional<UserDto> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

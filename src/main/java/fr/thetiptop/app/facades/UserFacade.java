@@ -20,6 +20,8 @@ public interface UserFacade {
 
     UserDto registerClient(SignUpRequestDto signUpRequestDto);
 
+    UserDto registerMachine(SignUpRequestDto signUpRequestDto);
+
     Optional<UserDto> getCurrentUser();
 }
 
