@@ -8,6 +8,7 @@ import fr.thetiptop.app.mapper.UserMapper;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.service.GainService;
 import fr.thetiptop.app.service.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class TicketController {
     }
 
     @PostMapping(value = "/gain", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GainDto> assignTicketToClient(@RequestBody TicketDto ticketDto) {
+    public ResponseEntity<GainDto> assignTicketToClient(@Valid @RequestBody TicketDto ticketDto) {
         final GainDto gainDto = gainService.generateGain(ticketDto.getCode());
 
         return new ResponseEntity<GainDto>(gainDto, HttpStatus.OK);
