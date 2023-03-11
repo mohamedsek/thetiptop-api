@@ -58,6 +58,8 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers("/tickets").hasRole(Constants.Roles.CHECKOUT_MACHINE)
+                .requestMatchers("/tickets/gain").hasRole(Constants.Roles.CUSTOMER)
+                .requestMatchers("/tickets/user").hasRole(Constants.Roles.CUSTOMER)
                 .requestMatchers("/tickets/jackpot").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/gains/stats").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/auth/registeradmin").hasRole(Constants.Roles.ADMIN)
