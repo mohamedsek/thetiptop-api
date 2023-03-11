@@ -6,4 +6,6 @@ public interface ClientService {
 
     ClientModel findByEmail(String email);
 
+    ClientModel getCurrentCustomer();
+
 }

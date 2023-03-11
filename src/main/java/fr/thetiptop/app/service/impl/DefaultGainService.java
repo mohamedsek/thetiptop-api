@@ -10,7 +10,6 @@ import fr.thetiptop.app.models.GainModel;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.GainRepository;
 import fr.thetiptop.app.service.ClientService;
-import fr.thetiptop.app.service.CustomUserService;
 import fr.thetiptop.app.service.GainService;
 import fr.thetiptop.app.service.TicketService;
 import fr.thetiptop.app.util.GameUtil;
@@ -38,15 +37,12 @@ public class DefaultGainService implements GainService {
 
     private UserFacade userFacade;
 
-    private CustomUserService customUserService;
-
     private ClientService clientService;
 
-    public DefaultGainService(TicketService ticketService, GainRepository gainRepository, UserFacade userFacade, CustomUserService customUserService, ClientService clientService) {
+    public DefaultGainService(TicketService ticketService, GainRepository gainRepository, UserFacade userFacade, ClientService clientService) {
         this.ticketService = ticketService;
         this.gainRepository = gainRepository;
         this.userFacade = userFacade;
-        this.customUserService = customUserService;
         this.clientService = clientService;
     }
 
@@ -78,13 +74,7 @@ public class DefaultGainService implements GainService {
 
 
         // assign client
-        String email = customUserService.getCurrentUsername();
-        ClientModel currentUser = clientService.findByEmail(email);
-
-        if (currentUser == null) {
-            logger.error("User should exist and should be of type Client/Customer");
-            throw new IllegalStateException("User should exist and should be of type Client/Customer");
-        }
+        ClientModel currentUser = clientService.getCurrentCustomer();
         ticketModel.setClient(currentUser);
 
         List<GainModel> availableGains = findAvailableGains();
