@@ -1,7 +1,9 @@
 package fr.thetiptop.app.service.impl;
 
+import fr.thetiptop.app.models.ClientModel;
 import fr.thetiptop.app.models.TicketModel;
 import fr.thetiptop.app.repository.TicketRepository;
+import fr.thetiptop.app.service.ClientService;
 import fr.thetiptop.app.service.TicketService;
 import fr.thetiptop.app.util.GameUtil;
 import org.apache.commons.logging.Log;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,8 +28,11 @@ public class DefaultTicketService implements TicketService {
 
     private TicketRepository ticketRepository;
 
-    public DefaultTicketService(TicketRepository ticketRepository) {
+    private ClientService clientService;
+
+    public DefaultTicketService(TicketRepository ticketRepository, ClientService clientService) {
         this.ticketRepository = ticketRepository;
+        this.clientService = clientService;
     }
 
     @Override
@@ -60,6 +66,13 @@ public class DefaultTicketService implements TicketService {
         return ticketRepository.save(ticketModel);
     }
 
+    @Override
+    public List<TicketModel> getCurrentUserGains() {
+        ClientModel currentCustomer = clientService.getCurrentCustomer();
+        List<TicketModel> userTickets = ticketRepository.findByClient(currentCustomer);
+        return userTickets;
+    }
+
     public void removeJackpotTicket() {
         Optional<TicketModel> jackpotTicket = this.findByCode(JACKPOT_TICKET_CODE);
         if (jackpotTicket.isPresent()) {
@@ -67,6 +80,7 @@ public class DefaultTicketService implements TicketService {
             ticketRepository.delete(jackpotTicket.get());
         }
     }
+
     private String generateCode() {
         StringBuilder sb = new StringBuilder();
         sb.append(generateRandomBloc());

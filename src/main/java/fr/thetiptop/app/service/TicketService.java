@@ -2,6 +2,7 @@ package fr.thetiptop.app.service;
 
 import fr.thetiptop.app.models.TicketModel;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TicketService {
@@ -15,4 +16,6 @@ public interface TicketService {
     TicketModel save(TicketModel ticketModel);
 
     void removeJackpotTicket();
+
+    List<TicketModel> getCurrentUserGains();
 }
