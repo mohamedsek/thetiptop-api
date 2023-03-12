@@ -15,7 +15,7 @@ public interface GainRepository extends JpaRepository<GainModel, Long> {
             "FROM gain AS g JOIN ticket t\n" +
             "\tON t.gain_id = g.id\n" +
             "\tJOIN  (SELECT COUNT(*) AS totalParticipating FROM ticket AS TP WHERE TP.is_participating = true ) AS STP\n" +
-            "WHERE t.is_participating = true \n" +
+            "WHERE t.is_participating = true AND t.code != '0000-0000-0000-0000'\n" +
             "GROUP BY g.id, g.title, g.chance, STP.totalParticipating", nativeQuery = true)
     List<GainDistributionDto> findCurrentDistributionPercentage();
 
