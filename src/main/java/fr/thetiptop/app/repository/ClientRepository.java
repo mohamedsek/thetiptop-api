@@ -13,4 +13,7 @@ public interface ClientRepository extends JpaRepository<ClientModel, Long> {
     @Query(value = "SELECT W.* FROM user W JOIN (SELECT U.id id FROM user U JOIN ticket T ON U.id = T.client_id WHERE T.is_participating=TRUE GROUP BY U.id LIMIT :start,1) WC ON WC.id=W.id", nativeQuery = true)
     ClientModel findRandomClientParticipating(@Param("start") long startPosition);
 
+    @Query(value = "SELECT COUNT(*) as distinct_user_count FROM ( SELECT U.id  FROM user U  JOIN ticket T ON U.id = T.client_id  WHERE T.is_participating = TRUE  GROUP BY U.id ) AS unique_users;", nativeQuery = true)
+    int getNumberOfParticipatingClients();
+
 }

@@ -42,8 +42,8 @@ public class DefaultUserFacade implements UserFacade {
 
     @Override
     public ClientModel getRandomClient() {
-        // TODO : Fix count participating clients only
-        long clientsCount = clientRepository.count();
+
+        long clientsCount = clientRepository.getNumberOfParticipatingClients();
         int selectRowIndex = GameUtil.randomValue(0, Long.valueOf(clientsCount).intValue());
         logger.debug("selected random client index: " + selectRowIndex);
         return clientRepository.findRandomClientParticipating(selectRowIndex);
