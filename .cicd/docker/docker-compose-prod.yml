@@ -13,10 +13,11 @@ services:
       - 'SPRING_PROFILES_ACTIVE=prod'
     labels:
       - traefik.enable=true
-      - traefik.http.routers.api-thetiptop.rule=Host(`prod.api.dsp-archiwebf22-at-sb-ms.fr`)
-      - traefik.http.routers.api-thetiptop.entrypoints=websecure
-      - traefik.http.services.api-thetiptop.loadbalancer.server.port=8080
+      - traefik.http.routers.api-thetiptop-prod.rule=Host(`prod.api.dsp-archiwebf22-at-sb-ms.fr`)
+      - traefik.http.routers.api-thetiptop-prod.entrypoints=websecure
+      - traefik.http.services.api-thetiptop-prod.loadbalancer.server.port=8080
     networks:
       - web
+      - thetiptop-api
     volumes:
       - "/var/log/thetiptop-api/prod:/var/log/thetiptop-api"
