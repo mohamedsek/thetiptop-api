@@ -4,6 +4,7 @@ package fr.thetiptop.app.facades.impl;
 import fr.thetiptop.app.constant.Constants;
 import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.dto.auth.SignUpRequestDto;
+import fr.thetiptop.app.dto.auth.UpdateUserProfileDto;
 import fr.thetiptop.app.facades.UserFacade;
 import fr.thetiptop.app.mapper.UserMapper;
 import fr.thetiptop.app.models.*;
@@ -11,6 +12,7 @@ import fr.thetiptop.app.repository.ClientRepository;
 import fr.thetiptop.app.repository.UserRepository;
 import fr.thetiptop.app.repository.UserRoleRepository;
 import fr.thetiptop.app.util.GameUtil;
+import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,6 +50,7 @@ public class DefaultUserFacade implements UserFacade {
         logger.debug("selected random client index: " + selectRowIndex);
         return clientRepository.findRandomClientParticipating(selectRowIndex);
     }
+
     @Override
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
@@ -76,45 +79,21 @@ public class DefaultUserFacade implements UserFacade {
     @Override
     public UserDto registerClient(SignUpRequestDto signUpRequestDto) {
         Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.CUSTOMER);
-        ClientModel userModel = ClientModel.builder()
-                .email(signUpRequestDto.getEmail())
-                .firstName(signUpRequestDto.getFirstName())
-                .lastName(signUpRequestDto.getLastName())
-                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
-                .uid(UUID.randomUUID().toString())
-                .role(roleUser.get())
-                .enabled(true)
-                .build();
+        ClientModel userModel = ClientModel.builder().email(signUpRequestDto.getEmail()).firstName(signUpRequestDto.getFirstName()).lastName(signUpRequestDto.getLastName()).password(passwordEncoder.encode(signUpRequestDto.getPassword())).uid(UUID.randomUUID().toString()).role(roleUser.get()).enabled(true).build();
         UserModel save = userRepository.save(userModel);
         return UserMapper.INSTANCE.mapToDto(save);
     }
 
     public UserDto registerMachine(SignUpRequestDto signUpRequestDto) {
         Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.CHECKOUT_MACHINE);
-        UserModel checkoutMachineModel = CheckoutMachineModel.builder()
-                .email(signUpRequestDto.getEmail())
-                .firstName(signUpRequestDto.getFirstName())
-                .lastName(signUpRequestDto.getLastName())
-                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
-                .uid(UUID.randomUUID().toString())
-                .role(roleUser.get())
-                .enabled(true)
-                .build();
+        UserModel checkoutMachineModel = CheckoutMachineModel.builder().email(signUpRequestDto.getEmail()).firstName(signUpRequestDto.getFirstName()).lastName(signUpRequestDto.getLastName()).password(passwordEncoder.encode(signUpRequestDto.getPassword())).uid(UUID.randomUUID().toString()).role(roleUser.get()).enabled(true).build();
         UserModel save = userRepository.save(checkoutMachineModel);
         return UserMapper.INSTANCE.mapToDto(save);
     }
 
     public UserDto registerAdmin(SignUpRequestDto signUpRequestDto) {
         Optional<UserRoleModel> roleUser = userRoleRepository.findByName(Constants.Roles.ADMIN);
-        UserModel adminModel = AdminModel.builder()
-                .email(signUpRequestDto.getEmail())
-                .firstName(signUpRequestDto.getFirstName())
-                .lastName(signUpRequestDto.getLastName())
-                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
-                .uid(UUID.randomUUID().toString())
-                .role(roleUser.get())
-                .enabled(true)
-                .build();
+        UserModel adminModel = AdminModel.builder().email(signUpRequestDto.getEmail()).firstName(signUpRequestDto.getFirstName()).lastName(signUpRequestDto.getLastName()).password(passwordEncoder.encode(signUpRequestDto.getPassword())).uid(UUID.randomUUID().toString()).role(roleUser.get()).enabled(true).build();
         UserModel save = userRepository.save(adminModel);
         return UserMapper.INSTANCE.mapToDto(save);
     }
@@ -127,4 +106,63 @@ public class DefaultUserFacade implements UserFacade {
         }
         return Optional.empty();
     }
+
+    @Override
+    @Transactional
+    public boolean deleteByUid(String uid) {
+        Optional<UserDto> currentUser = this.getCurrentUser();
+        if (currentUser.isEmpty() || !StringUtils.equals(uid, currentUser.get().getUid())) {
+            return false;
+        }
+        userRepository.deleteByUid(uid);
+        return true;
+    }
+
+    @Override
+    public boolean updateUser(String uid, UpdateUserProfileDto updateUserProfileDto) {
+        Optional<UserDto> currentUser = this.getCurrentUser();
+        if (currentUser.isEmpty() || !StringUtils.equals(uid, currentUser.get().getUid())) {
+            return false;
+        }
+        Optional<UserModel> userByUid = userRepository.findByUid(uid);
+        if (userByUid.isPresent()) {
+            UserModel userModel = userByUid.get();
+            userModel.setFirstName(updateUserProfileDto.getFirstName());
+            userModel.setLastName(updateUserProfileDto.getLastName());
+            userRepository.save(userModel);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updatePassword(String uid, String newPassword) {
+        Optional<UserDto> currentUser = this.getCurrentUser();
+        if (currentUser.isEmpty() || !StringUtils.equals(uid, currentUser.get().getUid())) {
+            return false;
+        }
+        Optional<UserModel> userByUid = userRepository.findByUid(uid);
+        if (userByUid.isPresent()) {
+            UserModel userModel = userByUid.get();
+            userModel.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(userModel);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isOldPasswordValid(String uid, String oldPassword) {
+        Optional<UserDto> currentUser = this.getCurrentUser();
+        if (currentUser.isEmpty() || !StringUtils.equals(uid, currentUser.get().getUid())) {
+            return false;
+        }
+        Optional<UserModel> userByUid = userRepository.findByUid(uid);
+        if (userByUid.isPresent()) {
+            UserModel userModel = userByUid.get();
+            return passwordEncoder.matches(oldPassword, userModel.getPassword());
+        }
+        return false;
+    }
 }
+
