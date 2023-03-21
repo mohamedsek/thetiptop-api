@@ -5,6 +5,7 @@ networks:
     external: true
   thetiptop-api:
     name: thetiptop-api
+    external: true
 
 services:
   api-thetiptop-dev:

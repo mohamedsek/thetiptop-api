@@ -5,7 +5,7 @@ networks:
     external: true
   thetiptop-api:
     name: thetiptop-api
-
+    external: true
 services:
   api-thetiptop-dev:
     container_name: "fr.dsp.thetiptop.api-release"
