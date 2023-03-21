@@ -3,6 +3,8 @@ networks:
   web:
     name: web
     external: true
+  thetiptop-api:
+    name: thetiptop-api
 
 services:
   api-thetiptop-prod:
