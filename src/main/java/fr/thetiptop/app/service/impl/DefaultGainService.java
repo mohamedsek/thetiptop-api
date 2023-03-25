@@ -167,8 +167,7 @@ public class DefaultGainService implements GainService {
 
     @Override
     public List<GainDto> getAll() {
-        List<GainModel> gainsWithoutJackpot = gainRepository.findByChanceGreaterThan(0);
-        return GainMapper.INSTANCE.gainToGainDto(gainsWithoutJackpot);
+        return GainMapper.INSTANCE.gainToGainDto(gainRepository.findAll());
     }
 
 
