@@ -5,7 +5,7 @@ public class GainDto {
     private Long id;
     private String title;
 
-    private double chance;
+    private String imageUrl;
 
     public Long getId() {
         return id;
@@ -23,11 +23,11 @@ public class GainDto {
         this.title = title;
     }
 
-    public double getChance() {
-        return chance;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setChance(double chance) {
-        this.chance = chance;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

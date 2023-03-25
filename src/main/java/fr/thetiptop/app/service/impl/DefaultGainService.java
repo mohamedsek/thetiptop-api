@@ -165,5 +165,11 @@ public class DefaultGainService implements GainService {
         return gainRepository.findCurrentDistributionPercentage();
     }
 
+    @Override
+    public List<GainDto> getAll() {
+        List<GainModel> gainsWithoutJackpot = gainRepository.findByChanceGreaterThan(0);
+        return GainMapper.INSTANCE.gainToGainDto(gainsWithoutJackpot);
+    }
+
 
 }
