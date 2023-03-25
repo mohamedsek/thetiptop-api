@@ -1,6 +1,7 @@
 package fr.thetiptop.app.controller;
 
 
+import fr.thetiptop.app.dto.ResponseStatuses;
 import fr.thetiptop.app.dto.UserDto;
 import fr.thetiptop.app.dto.auth.AuthResponseDto;
 import fr.thetiptop.app.dto.auth.SignInRequestDto;
@@ -29,9 +30,7 @@ public class AuthenticationController {
     private static final String CONFIRM_PASSWORD_MESSAGE_ERROR = "La confirmation du mot de passe ne correspond pas.";
     private static final String EMAIL_ALREADY_EXISTS_ERROR = "Cette adresse e-mail est déjà utilisée";
     private AuthenticationManager authenticationManager;
-
     private AppJwtService appJwtService;
-
     private UserFacade userFacade;
 
     public AuthenticationController(AuthenticationManager authenticationManager, AppJwtService appJwtService, UserFacade userFacade) {
@@ -58,17 +57,15 @@ public class AuthenticationController {
         if (userFacade.existsByEmail(signUpRequestDto.getEmail())) {
             bindingResult.rejectValue("email", "emailExists", EMAIL_ALREADY_EXISTS_ERROR);
         }
-        if (StringUtils.isBlank(signUpRequestDto.getEmail())
-                || StringUtils.isBlank(signUpRequestDto.getPassword())
-                || !StringUtils.equalsAnyIgnoreCase(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
+        if (!StringUtils.equals(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "confirmPasswordError", CONFIRM_PASSWORD_MESSAGE_ERROR);
         }
         if (bindingResult.hasErrors()) {
-            SignUpResponseDto failure = SignUpResponseDto.builder().status("Failure").errors(bindingResult.getAllErrors()).build();
+            SignUpResponseDto failure = SignUpResponseDto.builder().status(ResponseStatuses.Failure.toString()).errors(bindingResult.getAllErrors()).build();
             return ResponseEntity.badRequest().body(failure);
         }
         UserDto register = userFacade.registerClient(signUpRequestDto);
-        return ResponseEntity.ok(SignUpResponseDto.builder().status("Success").build());
+        return ResponseEntity.ok(SignUpResponseDto.builder().status(ResponseStatuses.Success.toString()).build());
     }
 
     @PostMapping("/registermachine")
@@ -77,17 +74,15 @@ public class AuthenticationController {
         if (userFacade.existsByEmail(signUpRequestDto.getEmail())) {
             bindingResult.rejectValue("email", "emailExists", EMAIL_ALREADY_EXISTS_ERROR);
         }
-        if (StringUtils.isBlank(signUpRequestDto.getEmail())
-                || StringUtils.isBlank(signUpRequestDto.getPassword())
-                || !StringUtils.equalsAnyIgnoreCase(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
+        if (!StringUtils.equals(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "confirmPasswordError", CONFIRM_PASSWORD_MESSAGE_ERROR);
         }
         if (bindingResult.hasErrors()) {
-            SignUpResponseDto failure = SignUpResponseDto.builder().status("Failure").errors(bindingResult.getAllErrors()).build();
+            SignUpResponseDto failure = SignUpResponseDto.builder().status(ResponseStatuses.Failure.toString()).errors(bindingResult.getAllErrors()).build();
             return ResponseEntity.badRequest().body(failure);
         }
         UserDto register = userFacade.registerMachine(signUpRequestDto);
-        return ResponseEntity.ok(SignUpResponseDto.builder().status("Success").build());
+        return ResponseEntity.ok(SignUpResponseDto.builder().status(ResponseStatuses.Success.toString()).build());
     }
 
     @PostMapping("/registeradmin")
@@ -96,17 +91,15 @@ public class AuthenticationController {
         if (userFacade.existsByEmail(signUpRequestDto.getEmail())) {
             bindingResult.rejectValue("email", "emailExists", EMAIL_ALREADY_EXISTS_ERROR);
         }
-        if (StringUtils.isBlank(signUpRequestDto.getEmail())
-                || StringUtils.isBlank(signUpRequestDto.getPassword())
-                || !StringUtils.equalsAnyIgnoreCase(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
+        if (!StringUtils.equals(signUpRequestDto.getPassword(), signUpRequestDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "confirmPasswordError", CONFIRM_PASSWORD_MESSAGE_ERROR);
         }
         if (bindingResult.hasErrors()) {
-            SignUpResponseDto failure = SignUpResponseDto.builder().status("Failure").errors(bindingResult.getAllErrors()).build();
+            SignUpResponseDto failure = SignUpResponseDto.builder().status(ResponseStatuses.Failure.toString()).errors(bindingResult.getAllErrors()).build();
             return ResponseEntity.badRequest().body(failure);
         }
         UserDto register = userFacade.registerAdmin(signUpRequestDto);
-        return ResponseEntity.ok(SignUpResponseDto.builder().status("Success").build());
+        return ResponseEntity.ok(SignUpResponseDto.builder().status(ResponseStatuses.Success.toString()).build());
     }
 
     @GetMapping("/userinfo")

@@ -64,6 +64,7 @@ public class SecurityConfig {
                 .requestMatchers("/gains/stats").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/auth/registeradmin").hasRole(Constants.Roles.ADMIN)
                 .requestMatchers("/auth/registermachine").hasRole(Constants.Roles.ADMIN)
+                .requestMatchers("/gains").permitAll()
                 .requestMatchers("/error/**", "/doc/**").permitAll()
                 .requestMatchers("/auth/**", "/auth2/**").permitAll()
                 .anyRequest().authenticated()

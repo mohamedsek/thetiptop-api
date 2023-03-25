@@ -165,5 +165,10 @@ public class DefaultGainService implements GainService {
         return gainRepository.findCurrentDistributionPercentage();
     }
 
+    @Override
+    public List<GainDto> getAll() {
+        return GainMapper.INSTANCE.gainToGainDto(gainRepository.findAll());
+    }
+
 
 }

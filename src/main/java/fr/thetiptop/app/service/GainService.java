@@ -15,4 +15,5 @@ public interface GainService {
 
     List<GainDistributionDto> findCurrentDistributionPercentage();
 
+    List<GainDto> getAll();
 }
