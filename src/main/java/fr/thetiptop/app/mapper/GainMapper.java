@@ -5,6 +5,8 @@ import fr.thetiptop.app.models.GainModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface GainMapper {
 
@@ -13,4 +15,6 @@ public interface GainMapper {
     GainDto gainToGainDto(GainModel gainModel);
 
     GainModel gainToGainModel(GainDto gainDto);
+
+    List<GainDto> gainToGainDto(List<GainModel> gainModel);
 }

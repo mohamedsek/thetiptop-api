@@ -3,6 +3,9 @@ networks:
   web:
     name: web
     external: true
+  thetiptop-api:
+    name: thetiptop-api
+    external: true
 
 services:
   api-thetiptop-dev:
@@ -18,5 +21,6 @@ services:
       - traefik.http.services.api-thetiptop-dev.loadbalancer.server.port=8080
     networks:
       - web
+      - thetiptop-api
     volumes:
       - "/var/log/thetiptop-api/dev:/var/log/thetiptop-api"

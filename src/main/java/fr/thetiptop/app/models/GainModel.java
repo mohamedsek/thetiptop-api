@@ -24,6 +24,9 @@ public class GainModel {
     @Column(nullable = false)
     private double chance;
 
+    @Column
+    private String imageUrl;
+
     @OneToMany(mappedBy = "gain")
     private List<TicketModel> tickets;
 }
