@@ -21,4 +21,6 @@ public interface GainRepository extends JpaRepository<GainModel, Long> {
 
     GainModel findOneByChance(double chanceValue);
 
+    List<GainModel> findByChanceGreaterThan(double value);
+
 }
