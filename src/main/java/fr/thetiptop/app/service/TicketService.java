@@ -18,4 +18,6 @@ public interface TicketService {
     void removeJackpotTicket();
 
     List<TicketModel> getCurrentUserGains();
+
+    List<TicketModel> getUserGains(String email);
 }
