@@ -62,4 +62,12 @@ public class TicketController {
         return new ResponseEntity<List<TicketGainDto>>(ticketGains, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/usergains", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TicketGainDto>> userGains(@RequestParam String email) {
+
+        List<TicketGainDto> ticketGains = ticketFacade.getUserGains(email);
+
+        return new ResponseEntity<List<TicketGainDto>>(ticketGains, HttpStatus.OK);
+    }
+
 }

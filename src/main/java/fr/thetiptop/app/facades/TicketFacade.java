@@ -7,4 +7,7 @@ import java.util.List;
 public interface TicketFacade {
 
     List<TicketGainDto> getCurrentUserGains();
+    
+    List<TicketGainDto> getUserGains(String email);
+
 }
