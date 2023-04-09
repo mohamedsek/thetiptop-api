@@ -1,9 +1,6 @@
 package fr.thetiptop.app.controller;
 
-import fr.thetiptop.app.dto.GainDto;
-import fr.thetiptop.app.dto.TicketDto;
-import fr.thetiptop.app.dto.TicketGainDto;
-import fr.thetiptop.app.dto.UserDto;
+import fr.thetiptop.app.dto.*;
 import fr.thetiptop.app.facades.TicketFacade;
 import fr.thetiptop.app.mapper.TicketMapper;
 import fr.thetiptop.app.mapper.UserMapper;
@@ -70,4 +67,12 @@ public class TicketController {
         return new ResponseEntity<List<TicketGainDto>>(ticketGains, HttpStatus.OK);
     }
 
+    @PostMapping("/usedticket")
+    public ResponseEntity<?> usedTicket(@RequestParam String usedTicketCode) {
+
+        if (ticketService.usedTicket(usedTicketCode)) {
+            return ResponseEntity.ok(ResponseDto.builder().message("ticket updated successfully").status(ResponseStatuses.Success.toString()).build());
+        }
+        return ResponseEntity.badRequest().body(ResponseDto.builder().message("Invalid ticket code").status(ResponseStatuses.Failure.toString()).build());
+    }
 }
