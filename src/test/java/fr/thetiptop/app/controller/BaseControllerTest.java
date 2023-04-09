@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql({"/scripts/users.sql", "/scripts/gains.sql", "/scripts/tickets.sql"})
+//@Sql(value = {"/scripts/users.sql", "/scripts/gains.sql", "/scripts/tickets.sql"})
 public class BaseControllerTest {
 
     protected static final String CUSTOMER_USERNAME = "customer@domain.com";
