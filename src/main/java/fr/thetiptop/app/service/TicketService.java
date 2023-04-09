@@ -20,4 +20,5 @@ public interface TicketService {
     List<TicketModel> getCurrentUserGains();
 
     List<TicketModel> getUserGains(String email);
+    boolean usedTicket(String code);
 }
