@@ -15,6 +15,7 @@ public class TicketGainDto {
     private Long ticketId;
     private String ticketCode;
     private String gainTitle;
+    private Boolean isUsed;
 
 
 }

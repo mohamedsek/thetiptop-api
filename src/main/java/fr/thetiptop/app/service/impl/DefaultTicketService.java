@@ -73,6 +73,21 @@ public class DefaultTicketService implements TicketService {
         return userTickets;
     }
 
+    public List<TicketModel> getUserGains(String email) {
+        ClientModel customer = clientService.findByEmail(email);
+        List<TicketModel> userTickets = ticketRepository.findByClient(customer);
+        return userTickets;
+    }
+    public boolean usedTicket(String code){
+        Optional<TicketModel> ticket = ticketRepository.findByCode(code);
+        if (ticket.isPresent()){
+            ticket.get().setIsUsed(true);
+            ticketRepository.save(ticket.get());
+            return true;
+        }
+        return false;
+    }
+
     public void removeJackpotTicket() {
         Optional<TicketModel> jackpotTicket = this.findByCode(JACKPOT_TICKET_CODE);
         if (jackpotTicket.isPresent()) {
