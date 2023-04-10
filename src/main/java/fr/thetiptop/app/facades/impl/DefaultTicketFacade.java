@@ -23,7 +23,14 @@ public class DefaultTicketFacade implements TicketFacade {
     public List<TicketGainDto> getCurrentUserGains() {
         List<TicketModel> userTickets = ticketService.getCurrentUserGains();
 
-        return userTickets.stream().map(ticket -> new TicketGainDto(ticket.getId(), ticket.getCode(), ticket.getGain().getTitle())).collect(Collectors.toList());
+        return userTickets.stream().map(ticket -> new TicketGainDto(ticket.getId(), ticket.getCode(), ticket.getGain().getTitle(), ticket.getIsUsed())).collect(Collectors.toList());
+    }
+
+    public List<TicketGainDto> getUserGains(String email) {
+
+        List<TicketModel> userTickets = ticketService.getUserGains(email);
+
+        return userTickets.stream().map(ticket -> new TicketGainDto(ticket.getId(), ticket.getCode(), ticket.getGain().getTitle(), ticket.getIsUsed())).collect(Collectors.toList());
     }
 
 }
