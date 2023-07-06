@@ -34,7 +34,7 @@ pipeline {
             steps {
                 echo ' Unit Testing ...'
                 script{
-                    BUILD_IMAGE.inside("--network web") {
+                    BUILD_IMAGE.inside("--network thetiptop-api") {
                         sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test'
                         junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
                     }
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 echo 'Qality control ...' 
                 script{
-                    BUILD_IMAGE.inside("--network web") {
+                    BUILD_IMAGE.inside("--network thetiptop-api") {
                         sh 'mvn -DargLine="-Dspring.profiles.active=test" clean test jacoco:report'
                         jacoco( 
                               execPattern: 'target/*.exec',

@@ -1,9 +1,14 @@
 package fr.thetiptop.app.dto;
 
+import fr.thetiptop.app.validators.TicketParticipationConstraint;
+import jakarta.validation.constraints.Pattern;
+
 public class TicketDto {
 
     private Long id;
 
+    @Pattern(regexp = "^[0-9]{5}\\-[0-9]{5}$", message = "Code ticket incorrect.")
+    @TicketParticipationConstraint
     private String code;
 
     private Boolean isParticipating;
